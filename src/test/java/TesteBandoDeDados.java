@@ -9,6 +9,8 @@ public class TesteBandoDeDados{
     public void iniciaBanco(){
        UsuarioDao usuarioDao = new UsuarioDao();
        Usuario usuario = new Usuario();
+       usuario.setNome("guilherme");
+       usuario.setEmail("guilherme@gmail.com");
        usuarioDao.salvar(usuario);
     }
 }
