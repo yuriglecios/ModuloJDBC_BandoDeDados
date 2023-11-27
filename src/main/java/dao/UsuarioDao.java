@@ -32,12 +32,49 @@ public class UsuarioDao {
         }
     }
 
-    public List<UsuarioDao> listarUsuarios() throws Exception{
-            List<UsuarioDao> lista = new ArrayList<>();
-            String sql = "select * from usuarios";
+    public List<Usuario> listarUsuarios() throws Exception{
+            List<Usuario> lista = new ArrayList<>();
+            String sql = "select * from usuario";
             PreparedStatement statement = connection.prepareStatement(sql);
             ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()){
+                Usuario usuario = new Usuario();
+                usuario.setId(resultSet.getLong("id"));
+                usuario.setNome(resultSet.getString("nome"));
+                usuario.setEmail(resultSet.getString("email"));
+                lista.add(usuario);
+            }
             return lista;
+    }
+
+    public Usuario buscarUsuarios(Long id) throws Exception{
+        Usuario buscausuario = new Usuario();
+        String sql = "select * from usuario where id =" + id;
+        PreparedStatement statement = connection.prepareStatement(sql);
+        ResultSet resultSet = statement.executeQuery();
+
+        while (resultSet.next()){
+            Usuario usuario = new Usuario();
+            buscausuario.setId(resultSet.getLong("id"));
+            buscausuario.setNome(resultSet.getString("nome"));
+            buscausuario.setEmail(resultSet.getString("email"));
+        }
+        return buscausuario;
+    }
+
+
+    public void updateUsuario(Usuario usuario)  {
+
+        try {
+            String sql = "update usuario set nome = ? where id =" + usuario.getId();
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1,usuario.getNome());
+            statement.execute();
+            connection.commit();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
