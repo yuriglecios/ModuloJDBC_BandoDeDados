@@ -35,5 +35,10 @@ public class TesteBandoDeDados{
        }
 
     }
+    @Test
+    public void testeDelete(){
+       UsuarioDao usuarioDao = new UsuarioDao();
+       usuarioDao.deletarUsuario(6L);
+    }
 
 }

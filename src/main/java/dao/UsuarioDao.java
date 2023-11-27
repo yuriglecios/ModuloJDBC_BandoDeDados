@@ -77,4 +77,20 @@ public class UsuarioDao {
         }
     }
 
+    public void deletarUsuario(Long id){
+        try {
+            String sql = "delete from usuario where id =" + id;
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.execute();
+            connection.commit();
+        } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+            throw new RuntimeException(e);
+        }
+    }
+
 }
