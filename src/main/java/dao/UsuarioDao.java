@@ -1,6 +1,8 @@
 package dao;
 
 import conexao_jdbc.SingleConnection;
+import model.BeanUsuarioFone;
+import model.Telefone;
 import model.Usuario;
 
 import java.sql.Connection;
@@ -28,6 +30,12 @@ public class UsuarioDao {
             connection.commit();//salva no bamco
 
         } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+            ;
             e.printStackTrace();
         }
     }
@@ -91,6 +99,57 @@ public class UsuarioDao {
             }
             throw new RuntimeException(e);
         }
+    }
+
+    public void salvarTelefone (Telefone telefone){
+        try {
+
+            String sql = "insert into telefone (numero, descricao, usuario_id) values (?,?,?)";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, telefone.getTelefone());
+            statement.setString(2,telefone.getDescricao());
+            statement.setLong(3,telefone.getUsuario_id());
+            statement.execute();
+            connection.commit();
+
+
+        } catch (Exception e){
+
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+
+        }
+    }
+
+    public List<BeanUsuarioFone> listaInnerJoin() throws SQLException {
+        List<BeanUsuarioFone> usuarioFone = new ArrayList<>();
+        String sql = " select ";
+        sql += "  u.nome, ";
+        sql += "  tel.numero, ";
+        sql += "  u.email ";
+        sql += " from telefone tel ";
+        sql += " inner join usuario u ";
+        sql += " on tel.usuario_id = u.id";
+        try {
+
+            PreparedStatement statement = connection.prepareStatement(sql);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()){
+                BeanUsuarioFone beanUsuarioFone = new BeanUsuarioFone();
+                beanUsuarioFone.setNumero(resultSet.getString("numero"));
+                beanUsuarioFone.setNome(resultSet.getString("nome"));
+                beanUsuarioFone.setEmail(resultSet.getString("email"));
+                usuarioFone.add(beanUsuarioFone);
+            }
+        } catch (Exception e){
+            connection.rollback();
+        }
+
+        return usuarioFone;
     }
 
 }

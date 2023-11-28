@@ -1,9 +1,12 @@
 import conexao_jdbc.SingleConnection;
 import dao.UsuarioDao;
 import junit.framework.TestCase;
+import model.BeanUsuarioFone;
+import model.Telefone;
 import model.Usuario;
 import org.junit.Test;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public class TesteBandoDeDados{
@@ -24,6 +27,16 @@ public class TesteBandoDeDados{
        }
     }
     @Test
+    public void listarInnerJoin() throws SQLException {
+       UsuarioDao usuarioDao = new UsuarioDao();
+       List<BeanUsuarioFone> beanUsuarioFone = usuarioDao.listaInnerJoin();
+
+       for (BeanUsuarioFone beanUsuarioFone1 : beanUsuarioFone){
+           System.out.println("Numero: " + beanUsuarioFone1.getNumero() + " | Nome: " + beanUsuarioFone1.getNome() + " | Email: " + beanUsuarioFone1.getEmail());
+       }
+    }
+
+    @Test
     public void testaUpdade(){
        try {
            UsuarioDao usuarioDao = new UsuarioDao();
@@ -39,6 +52,16 @@ public class TesteBandoDeDados{
     public void testeDelete(){
        UsuarioDao usuarioDao = new UsuarioDao();
        usuarioDao.deletarUsuario(6L);
+    }
+    @Test
+    public void testaTelefoneInsert(){
+       Telefone telefone = new Telefone();
+       telefone.setTelefone("98484-5555");
+       telefone.setDescricao("empresa");
+       telefone.setUsuario_id(3L);
+
+       UsuarioDao usuarioDao = new UsuarioDao();
+       usuarioDao.salvarTelefone(telefone);
     }
 
 }
