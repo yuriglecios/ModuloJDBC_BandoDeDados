@@ -101,6 +101,26 @@ public class UsuarioDao {
         }
     }
 
+    public void deletarEmCascata(Long usuario_id){
+        try {
+            String sqlFone = "delete from telefone where usuario_id =" + usuario_id;
+            String sqlUsuario = "delete from usuario where id =" + usuario_id;
+            PreparedStatement statement = connection.prepareStatement(sqlFone);
+            statement.executeUpdate();
+            connection.commit();
+
+            PreparedStatement statement2 = connection.prepareStatement(sqlUsuario);
+            statement2.executeUpdate();
+            connection.commit();
+        } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+    }
+
     public void salvarTelefone (Telefone telefone){
         try {
 

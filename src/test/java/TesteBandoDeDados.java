@@ -63,5 +63,10 @@ public class TesteBandoDeDados{
        UsuarioDao usuarioDao = new UsuarioDao();
        usuarioDao.salvarTelefone(telefone);
     }
+    @Test
+    public void deletarEmCascata(){
+       UsuarioDao usuarioDao = new UsuarioDao();
+       usuarioDao.deletarEmCascata(7L);
+    }
 
 }
